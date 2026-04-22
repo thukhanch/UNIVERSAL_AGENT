@@ -1,0 +1,84 @@
+{
+  "name": "UNIVERSAL_AGENT_APP_BACKEND",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "app-backend-whatsapp",
+        "responseMode": "responseNode"
+      },
+      "id": "ab1",
+      "name": "WhatsApp Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [120, 260]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3020/webhooks/whatsapp",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json}}"
+      },
+      "id": "ab2",
+      "name": "App Backend Webhook",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [360, 260]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://localhost:3020/calendar/freebusy"
+      },
+      "id": "ab3",
+      "name": "App Backend FreeBusy",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [580, 180]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3020/calendar/events",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.eventCreateRequest}}"
+      },
+      "id": "ab4",
+      "name": "App Backend Create Event",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [800, 180]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}"
+      },
+      "id": "ab5",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1040, 260]
+    }
+  ],
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [[{ "node": "App Backend Webhook", "type": "main", "index": 0 }]]
+    },
+    "App Backend Webhook": {
+      "main": [[{ "node": "App Backend FreeBusy", "type": "main", "index": 0 }]]
+    },
+    "App Backend FreeBusy": {
+      "main": [[{ "node": "App Backend Create Event", "type": "main", "index": 0 }]]
+    },
+    "App Backend Create Event": {
+      "main": [[{ "node": "Webhook Response", "type": "main", "index": 0 }]]
+    }
+  },
+  "meta": {
+    "notes": "Workflow apontando para o app-backend em modo local/provider-ready."
+  }
+}

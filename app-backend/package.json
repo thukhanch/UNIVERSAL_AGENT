@@ -1,0 +1,11 @@
+{
+  "name": "universal-agent-app-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Backend quase-prod do UNIVERSAL_AGENT com modos mock e provider-ready.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  }
+}

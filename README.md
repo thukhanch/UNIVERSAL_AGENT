@@ -29,6 +29,7 @@ UNIVERSAL_AGENT/
 ├── templates/
 ├── mapping/
 ├── mock-backend/
+├── app-backend/
 ├── playground/
 └── deploy/
 ```
@@ -111,6 +112,10 @@ Matrizes de intenção, ação, node e template.
 
 Mini API REST local para testar o fluxo ponta a ponta sem integrações reais.
 
+### Pasta `app-backend/`
+
+Backend quase-prod com modos `mock` e `provider-ready`, preparado para migrar depois para integrações reais.
+
 ### Pasta `playground/`
 
 Frontend estático simples para disparar cenários e visualizar respostas do backend.
@@ -136,6 +141,7 @@ Documentação de transição entre protótipo local e futura implantação mais
 13. `mock-backend/README.md`
 14. `playground/README.md`
 15. `deploy/README.md`
+16. `app-backend/README.md`
 
 ## Como usar step by step
 
@@ -175,11 +181,15 @@ Use `mock-backend/` para simular atendimento, agenda e handoff sem depender de A
 
 Use `playground/` para enviar cenários rápidos ao backend e visualizar o retorno JSON.
 
-### Etapa 10 — planejar evolução de deploy
+### Etapa 10 — escolher o backend de operação
+
+Use `mock-backend/` para demonstração rápida e `app-backend/` quando quiser testar uma arquitetura mais próxima de produção.
+
+### Etapa 11 — planejar evolução de deploy
 
 Use `deploy/` para mapear variáveis, arquitetura e próximos passos de saída do modo mock.
 
-### Etapa 11 — revisar regras críticas
+### Etapa 12 — revisar regras críticas
 
 Antes de produção, confirme que o fluxo:
 - não inventa respostas
@@ -214,8 +224,10 @@ Fluxos paralelos:
 - `json/universal_agent_n8n_skeleton.json` é um esqueleto conceitual.
 - `json/universal_agent_n8n_importable.json` já se aproxima mais de um export/import do n8n, mas ainda precisa de credenciais e ajustes reais.
 - `json/universal_agent_n8n_detailed.json` aproxima ainda mais o fluxo do desenho operacional completo.
+- `json/universal_agent_n8n_app_backend.json` aponta para o backend mais próximo de produção.
 - Os contratos de API em `api/` são documentais e os schemas em `schemas/` formalizam a estrutura esperada.
-- A pasta `mock-backend/` agora funciona como mini API REST de prototipagem local.
+- A pasta `mock-backend/` funciona como mini API REST de prototipagem local.
+- A pasta `app-backend/` introduz uma arquitetura quase-prod com providers configuráveis.
 - A pasta `playground/` fornece uma forma visual simples de testar o backend.
 - A pasta `deploy/` documenta a passagem da camada mock para uma futura camada real.
 - O projeto foi organizado para imitar o raciocínio visual de um fluxo n8n e reduzir a distância entre documentação e execução.

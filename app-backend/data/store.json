@@ -1,0 +1,205 @@
+{
+  "conversations": [
+    {
+      "at": "2026-04-22T02:59:31.087Z",
+      "from": "+5511991112222",
+      "intent": "schedule",
+      "input": {
+        "messageId": "wamid.HBgLM1",
+        "from": "+5511991112222",
+        "profileName": "Ana",
+        "timestamp": "2026-04-21T09:10:00-03:00",
+        "type": "text",
+        "text": {
+          "body": "Oi, quero saber horários para manicure"
+        },
+        "context": {
+          "isReturningCustomer": false
+        }
+      },
+      "response": {
+        "provider": "mock",
+        "message": "Oi, Ana! Encontrei estes horários disponíveis: 10h, 14h e 16h. Qual funciona melhor pra você?"
+      }
+    },
+    {
+      "at": "2026-04-22T02:59:41.528Z",
+      "from": "+5511980001111",
+      "intent": "payment",
+      "input": {
+        "messageId": "handoff-app",
+        "from": "+5511980001111",
+        "profileName": "Rita",
+        "timestamp": "2026-04-21T18:00:00-03:00",
+        "type": "text",
+        "text": {
+          "body": "Quero reembolso agora"
+        }
+      },
+      "response": {
+        "provider": "mock",
+        "message": "Entendo sua situação, Rita. Vou encaminhar você para um atendente humano agora."
+      }
+    }
+  ],
+  "appointments": [
+    {
+      "id": "appt_1776826781404",
+      "provider": "mock",
+      "summary": "Manicure — Ana",
+      "start": {
+        "dateTime": "2026-04-22T10:00:00-03:00",
+        "timeZone": "America/Sao_Paulo"
+      },
+      "end": {
+        "dateTime": "2026-04-22T10:45:00-03:00",
+        "timeZone": "America/Sao_Paulo"
+      },
+      "description": "Cliente: Ana | WhatsApp: +5511991112222 | Serviço: Manicure",
+      "reminders": {
+        "useDefault": false,
+        "overrides": [
+          {
+            "method": "popup",
+            "minutes": 1440
+          },
+          {
+            "method": "popup",
+            "minutes": 60
+          }
+        ]
+      }
+    }
+  ],
+  "handoffs": [
+    {
+      "id": "handoff_1776826781555",
+      "target": "replace-me",
+      "customer": {
+        "name": "Rita",
+        "phone": "+5511980001111"
+      },
+      "reason": "human_handoff",
+      "conversationHistory": [
+        {
+          "from": "customer",
+          "text": "Quero reembolso agora"
+        }
+      ],
+      "currentStatus": "paused_for_human"
+    }
+  ],
+  "auditLogs": [
+    {
+      "at": "2026-04-22T02:59:31.074Z",
+      "type": "whatsapp.inbound",
+      "payload": {
+        "provider": "mock",
+        "body": {
+          "messageId": "wamid.HBgLM1",
+          "from": "+5511991112222",
+          "profileName": "Ana",
+          "timestamp": "2026-04-21T09:10:00-03:00",
+          "type": "text",
+          "text": {
+            "body": "Oi, quero saber horários para manicure"
+          },
+          "context": {
+            "isReturningCustomer": false
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-04-22T02:59:31.106Z",
+      "type": "conversation.save",
+      "payload": {
+        "from": "+5511991112222",
+        "intent": "schedule"
+      }
+    },
+    {
+      "at": "2026-04-22T02:59:41.416Z",
+      "type": "calendar.create",
+      "payload": {
+        "id": "appt_1776826781404",
+        "provider": "mock",
+        "summary": "Manicure — Ana",
+        "start": {
+          "dateTime": "2026-04-22T10:00:00-03:00",
+          "timeZone": "America/Sao_Paulo"
+        },
+        "end": {
+          "dateTime": "2026-04-22T10:45:00-03:00",
+          "timeZone": "America/Sao_Paulo"
+        },
+        "description": "Cliente: Ana | WhatsApp: +5511991112222 | Serviço: Manicure",
+        "reminders": {
+          "useDefault": false,
+          "overrides": [
+            {
+              "method": "popup",
+              "minutes": 1440
+            },
+            {
+              "method": "popup",
+              "minutes": 60
+            }
+          ]
+        }
+      }
+    },
+    {
+      "at": "2026-04-22T02:59:41.517Z",
+      "type": "whatsapp.inbound",
+      "payload": {
+        "provider": "mock",
+        "body": {
+          "messageId": "handoff-app",
+          "from": "+5511980001111",
+          "profileName": "Rita",
+          "timestamp": "2026-04-21T18:00:00-03:00",
+          "type": "text",
+          "text": {
+            "body": "Quero reembolso agora"
+          }
+        }
+      }
+    },
+    {
+      "at": "2026-04-22T02:59:41.542Z",
+      "type": "conversation.save",
+      "payload": {
+        "from": "+5511980001111",
+        "intent": "payment"
+      }
+    },
+    {
+      "at": "2026-04-22T02:59:41.570Z",
+      "type": "handoff.create",
+      "payload": {
+        "id": "handoff_1776826781555",
+        "target": "replace-me",
+        "customer": {
+          "name": "Rita",
+          "phone": "+5511980001111"
+        },
+        "reason": "human_handoff",
+        "conversationHistory": [
+          {
+            "from": "customer",
+            "text": "Quero reembolso agora"
+          }
+        ],
+        "currentStatus": "paused_for_human"
+      }
+    },
+    {
+      "at": "2026-04-22T02:59:41.657Z",
+      "type": "calendar.cancel",
+      "payload": {
+        "appointmentId": "appt_test_delete"
+      }
+    }
+  ]
+}
