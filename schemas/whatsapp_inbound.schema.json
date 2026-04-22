@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universal-agent.local/schemas/whatsapp_inbound.schema.json",
+  "title": "WhatsApp Inbound",
+  "type": "object",
+  "required": ["messageId", "from", "timestamp", "type"],
+  "properties": {
+    "messageId": { "type": "string" },
+    "from": { "type": "string" },
+    "profileName": { "type": "string" },
+    "timestamp": { "type": "string" },
+    "type": { "type": "string", "enum": ["text", "audio"] },
+    "text": {
+      "type": "object",
+      "properties": {
+        "body": { "type": "string" }
+      },
+      "required": ["body"],
+      "additionalProperties": true
+    },
+    "audio": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "isReturningCustomer": { "type": "boolean" },
+        "lastEventId": { "type": "string" },
+        "eventId": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,123 @@
+{
+  "name": "UNIVERSAL_AGENT_IMPORTABLE",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-inbound",
+        "responseMode": "responseNode"
+      },
+      "id": "node-webhook-1",
+      "name": "WhatsApp Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "node-code-2",
+      "name": "Normalize Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            { "conditions": { "options": { "caseSensitive": false }, "conditions": [{ "leftValue": "={{$json.intent}}", "rightValue": "schedule", "operator": { "type": "string", "operation": "equals" } }] }, "renameOutput": true, "outputKey": "schedule" },
+            { "conditions": { "options": { "caseSensitive": false }, "conditions": [{ "leftValue": "={{$json.intent}}", "rightValue": "cancel", "operator": { "type": "string", "operation": "equals" } }] }, "renameOutput": true, "outputKey": "cancel" },
+            { "conditions": { "options": { "caseSensitive": false }, "conditions": [{ "leftValue": "={{$json.intent}}", "rightValue": "reschedule", "operator": { "type": "string", "operation": "equals" } }] }, "renameOutput": true, "outputKey": "reschedule" },
+            { "conditions": { "options": { "caseSensitive": false }, "conditions": [{ "leftValue": "={{$json.intent}}", "rightValue": "payment", "operator": { "type": "string", "operation": "equals" } }] }, "renameOutput": true, "outputKey": "payment" }
+          ]
+        }
+      },
+      "id": "node-switch-3",
+      "name": "Intent Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/calendar/v3/freeBusy",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.freebusyRequest}}"
+      },
+      "id": "node-http-7",
+      "name": "Google Calendar FreeBusy",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [900, 220]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://www.googleapis.com/calendar/v3/calendars/{{$json.calendarId}}/events",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.eventCreateRequest}}"
+      },
+      "id": "node-http-10",
+      "name": "Create Calendar Event",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1120, 220]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}"
+      },
+      "id": "node-response-16",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1360, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "node-code-15",
+      "name": "Human Handoff",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 420]
+    }
+  ],
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [[{ "node": "Normalize Context", "type": "main", "index": 0 }]]
+    },
+    "Normalize Context": {
+      "main": [[{ "node": "Intent Router", "type": "main", "index": 0 }]]
+    },
+    "Intent Router": {
+      "main": [
+        [{ "node": "Google Calendar FreeBusy", "type": "main", "index": 0 }],
+        [{ "node": "Webhook Response", "type": "main", "index": 0 }],
+        [{ "node": "Google Calendar FreeBusy", "type": "main", "index": 0 }],
+        [{ "node": "Human Handoff", "type": "main", "index": 0 }]
+      ]
+    },
+    "Google Calendar FreeBusy": {
+      "main": [[{ "node": "Create Calendar Event", "type": "main", "index": 0 }]]
+    },
+    "Create Calendar Event": {
+      "main": [[{ "node": "Webhook Response", "type": "main", "index": 0 }]]
+    },
+    "Human Handoff": {
+      "main": [[{ "node": "Webhook Response", "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "notes": "Workflow base com estrutura mais próxima de importação n8n. Ainda requer configuração real de credenciais, expressões e regras de negócio."
+  }
+}

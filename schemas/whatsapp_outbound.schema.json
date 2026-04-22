@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universal-agent.local/schemas/whatsapp_outbound.schema.json",
+  "title": "WhatsApp Outbound",
+  "type": "object",
+  "required": ["to", "type", "text"],
+  "properties": {
+    "to": { "type": "string" },
+    "type": { "type": "string", "enum": ["text"] },
+    "text": {
+      "type": "object",
+      "required": ["body"],
+      "properties": {
+        "body": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "intent": { "type": "string" },
+        "conversationStatus": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

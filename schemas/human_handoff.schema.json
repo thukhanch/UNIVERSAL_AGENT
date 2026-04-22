@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universal-agent.local/schemas/human_handoff.schema.json",
+  "title": "Human Handoff",
+  "type": "object",
+  "required": ["customer", "reason", "conversationHistory", "currentStatus"],
+  "properties": {
+    "customer": {
+      "type": "object",
+      "required": ["name", "phone"],
+      "properties": {
+        "name": { "type": "string" },
+        "phone": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "reason": { "type": "string" },
+    "conversationHistory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": { "type": "string" },
+          "text": { "type": "string" }
+        },
+        "required": ["from", "text"],
+        "additionalProperties": true
+      }
+    },
+    "currentStatus": { "type": "string" },
+    "appointment": {
+      "type": "object",
+      "properties": {
+        "eventId": { "type": "string" },
+        "service": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

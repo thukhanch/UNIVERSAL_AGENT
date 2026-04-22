@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universal-agent.local/schemas/google_calendar_freebusy.schema.json",
+  "title": "Google Calendar FreeBusy",
+  "type": "object",
+  "required": ["timeMin", "timeMax", "timeZone", "items"],
+  "properties": {
+    "timeMin": { "type": "string" },
+    "timeMax": { "type": "string" },
+    "timeZone": { "type": "string" },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

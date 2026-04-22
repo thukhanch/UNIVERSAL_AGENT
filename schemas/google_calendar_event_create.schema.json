@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://universal-agent.local/schemas/google_calendar_event_create.schema.json",
+  "title": "Google Calendar Event Create",
+  "type": "object",
+  "required": ["summary", "start", "end", "description"],
+  "properties": {
+    "summary": { "type": "string" },
+    "description": { "type": "string" },
+    "location": { "type": "string" },
+    "start": {
+      "type": "object",
+      "required": ["dateTime", "timeZone"],
+      "properties": {
+        "dateTime": { "type": "string" },
+        "timeZone": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "end": {
+      "type": "object",
+      "required": ["dateTime", "timeZone"],
+      "properties": {
+        "dateTime": { "type": "string" },
+        "timeZone": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "reminders": {
+      "type": "object",
+      "properties": {
+        "useDefault": { "type": "boolean" },
+        "overrides": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "method": { "type": "string" },
+              "minutes": { "type": "number" }
+            },
+            "required": ["method", "minutes"],
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -24,7 +24,11 @@ UNIVERSAL_AGENT/
 ├── prompts/
 ├── json/
 ├── api/
-└── examples/
+├── examples/
+├── schemas/
+├── templates/
+├── mapping/
+└── mock-backend/
 ```
 
 ## O que cada área faz
@@ -65,6 +69,8 @@ Prompts prontos para operação:
 
 Estruturas para implementação estilo n8n:
 - `universal_agent_n8n_skeleton.json`
+- `universal_agent_n8n_importable.json`
+- `workflow_credentials_placeholders.json`
 - `node_map.json`
 
 ### Pasta `api/`
@@ -87,6 +93,22 @@ Payloads de exemplo para testes e implementação:
 - resposta de criação
 - handoff humano
 
+### Pasta `schemas/`
+
+Validação formal dos payloads com JSON Schema.
+
+### Pasta `templates/`
+
+Mensagens prontas por cenário operacional.
+
+### Pasta `mapping/`
+
+Matrizes de intenção, ação, node e template.
+
+### Pasta `mock-backend/`
+
+Backend local simples para testar o fluxo ponta a ponta sem integrações reais.
+
 ## Ordem recomendada de leitura
 
 1. `README.md`
@@ -98,6 +120,10 @@ Payloads de exemplo para testes e implementação:
 7. `json/universal_agent_n8n_skeleton.json`
 8. `api/README.md`
 9. arquivos de `examples/`
+10. `schemas/README.md`
+11. arquivos de `templates/`
+12. arquivos de `mapping/`
+13. `mock-backend/README.md`
 
 ## Como usar step by step
 
@@ -119,13 +145,21 @@ Leia `N8N_FLOW_STEP_BY_STEP.md` e depois a pasta `docs/` para ver cada etapa com
 
 ### Etapa 5 — montar a automação
 
-Use `json/universal_agent_n8n_skeleton.json` como ponto de partida para criar o workflow no estilo n8n.
+Use `json/universal_agent_n8n_skeleton.json` como ponto de partida conceitual e `json/universal_agent_n8n_importable.json` como base mais próxima de importação no n8n.
 
-### Etapa 6 — ligar integrações reais
+### Etapa 6 — validar payloads
 
-Use a pasta `api/` como contrato de referência e a pasta `examples/` para validar payloads.
+Use a pasta `api/` como contrato de referência, a pasta `examples/` para exemplos completos e a pasta `schemas/` para validação estrutural.
 
-### Etapa 7 — revisar regras críticas
+### Etapa 7 — reutilizar mensagens prontas
+
+Use a pasta `templates/` para respostas rápidas por cenário e a pasta `mapping/` para entender qual template e qual node entram em cada caso.
+
+### Etapa 8 — testar localmente
+
+Use `mock-backend/` para simular atendimento, agenda e handoff sem depender de APIs reais.
+
+### Etapa 9 — revisar regras críticas
 
 Antes de produção, confirme que o fluxo:
 - não inventa respostas
@@ -157,9 +191,11 @@ Fluxos paralelos:
 
 ## Observações importantes
 
-- O JSON deste repositório é um esqueleto conceitual e precisa de credenciais, endpoints e ajustes antes de uso real.
-- Os contratos de API são documentais e servem como base de implementação.
-- O projeto foi organizado para imitar o raciocínio visual de um fluxo n8n, mesmo antes da implementação definitiva.
+- `json/universal_agent_n8n_skeleton.json` é um esqueleto conceitual.
+- `json/universal_agent_n8n_importable.json` já se aproxima mais de um export/import do n8n, mas ainda precisa de credenciais e ajustes reais.
+- Os contratos de API em `api/` são documentais e os schemas em `schemas/` formalizam a estrutura esperada.
+- A pasta `mock-backend/` é uma camada executável de prototipagem local, não um backend de produção.
+- O projeto foi organizado para imitar o raciocínio visual de um fluxo n8n e reduzir a distância entre documentação e execução.
 
 ## Objetivo
 

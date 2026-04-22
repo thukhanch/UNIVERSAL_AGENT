@@ -1,0 +1,64 @@
+{
+  "conversations": [
+    {
+      "at": "2026-04-22T02:17:21.444Z",
+      "from": "+5511991112222",
+      "intent": "schedule",
+      "input": {
+        "messageId": "wamid.HBgLM1",
+        "from": "+5511991112222",
+        "profileName": "Ana",
+        "timestamp": "2026-04-21T09:10:00-03:00",
+        "type": "text",
+        "text": {
+          "body": "Oi, quero saber horários para manicure"
+        },
+        "context": {
+          "isReturningCustomer": false
+        }
+      },
+      "response": {
+        "message": "Oi, Ana! Encontrei estes horários disponíveis: 10h, 14h e 16h. Qual funciona melhor pra você?"
+      }
+    },
+    {
+      "at": "2026-04-22T02:17:21.737Z",
+      "from": "+5511988887777",
+      "intent": "cancel",
+      "input": {
+        "messageId": "wamid.HBgLM3",
+        "from": "+5511988887777",
+        "profileName": "Carlos",
+        "timestamp": "2026-04-21T13:00:00-03:00",
+        "type": "text",
+        "text": {
+          "body": "Preciso cancelar meu agendamento de amanhã"
+        },
+        "context": {
+          "isReturningCustomer": true,
+          "eventId": "evt_cancel_123"
+        }
+      },
+      "response": {
+        "message": "Cancelamento confirmado, Carlos. Quando quiser marcar novamente, é só me chamar aqui."
+      }
+    },
+    {
+      "at": "2026-04-22T02:17:21.933Z",
+      "from": "+5511995554444",
+      "intent": "payment",
+      "input": {
+        "from": "+5511995554444",
+        "profileName": "Marcos",
+        "timestamp": "2026-04-21T14:10:00-03:00",
+        "type": "text",
+        "text": {
+          "body": "Quero reembolso agora"
+        }
+      },
+      "response": {
+        "message": "Entendo sua situação, Marcos. Vou encaminhar você para um atendente humano agora."
+      }
+    }
+  ]
+}
