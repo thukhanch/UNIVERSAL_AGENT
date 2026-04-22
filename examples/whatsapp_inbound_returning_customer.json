@@ -1,0 +1,14 @@
+{
+  "messageId": "wamid.HBgLM2",
+  "from": "+5511991112222",
+  "profileName": "Ana",
+  "timestamp": "2026-04-21T11:40:00-03:00",
+  "type": "text",
+  "text": {
+    "body": "Quero remarcar meu horário"
+  },
+  "context": {
+    "isReturningCustomer": true,
+    "lastEventId": "evt_456"
+  }
+}

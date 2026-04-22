@@ -1,0 +1,31 @@
+{
+  "contract": "google_calendar_event_create",
+  "description": "Criação de evento de agendamento no Google Calendar.",
+  "required": ["summary", "start", "end", "description"],
+  "optional": ["reminders", "location"],
+  "exampleShape": {
+    "summary": "Escova — Maria",
+    "start": {
+      "dateTime": "2026-04-22T14:00:00-03:00",
+      "timeZone": "America/Sao_Paulo"
+    },
+    "end": {
+      "dateTime": "2026-04-22T14:45:00-03:00",
+      "timeZone": "America/Sao_Paulo"
+    },
+    "description": "Cliente: Maria | WhatsApp: +5511999999999 | Serviço: Escova",
+    "reminders": {
+      "useDefault": false,
+      "overrides": [
+        {
+          "method": "popup",
+          "minutes": 1440
+        },
+        {
+          "method": "popup",
+          "minutes": 60
+        }
+      ]
+    }
+  }
+}

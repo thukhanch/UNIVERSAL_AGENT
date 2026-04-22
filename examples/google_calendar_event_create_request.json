@@ -1,0 +1,25 @@
+{
+  "summary": "Manicure — Ana",
+  "start": {
+    "dateTime": "2026-04-22T10:00:00-03:00",
+    "timeZone": "America/Sao_Paulo"
+  },
+  "end": {
+    "dateTime": "2026-04-22T10:45:00-03:00",
+    "timeZone": "America/Sao_Paulo"
+  },
+  "description": "Cliente: Ana | WhatsApp: +5511991112222 | Serviço: Manicure",
+  "reminders": {
+    "useDefault": false,
+    "overrides": [
+      {
+        "method": "popup",
+        "minutes": 1440
+      },
+      {
+        "method": "popup",
+        "minutes": 60
+      }
+    ]
+  }
+}

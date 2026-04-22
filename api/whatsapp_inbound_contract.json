@@ -1,0 +1,19 @@
+{
+  "contract": "whatsapp_inbound",
+  "description": "Mensagem recebida do cliente via WhatsApp Business API.",
+  "required": ["messageId", "from", "timestamp", "type"],
+  "optional": ["profileName", "text", "audio", "context"],
+  "exampleShape": {
+    "messageId": "wamid.example123",
+    "from": "+5511999999999",
+    "profileName": "Maria",
+    "timestamp": "2026-04-21T18:20:00-03:00",
+    "type": "text",
+    "text": {
+      "body": "Quero agendar uma escova amanhã"
+    },
+    "context": {
+      "isReturningCustomer": false
+    }
+  }
+}

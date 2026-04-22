@@ -1,0 +1,17 @@
+{
+  "contract": "whatsapp_outbound",
+  "description": "Mensagem enviada pelo agente ao cliente no WhatsApp.",
+  "required": ["to", "type", "text"],
+  "optional": ["context", "metadata"],
+  "exampleShape": {
+    "to": "+5511999999999",
+    "type": "text",
+    "text": {
+      "body": "Oi, Maria! Encontrei estes horários disponíveis para Escova: 10h, 14h ou 16h. Qual funciona melhor pra você?"
+    },
+    "metadata": {
+      "intent": "schedule",
+      "conversationStatus": "awaiting_slot_choice"
+    }
+  }
+}

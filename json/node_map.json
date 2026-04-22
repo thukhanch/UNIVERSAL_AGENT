@@ -1,0 +1,101 @@
+{
+  "workflow": "UNIVERSAL_AGENT",
+  "nodes": [
+    {
+      "id": 1,
+      "name": "WhatsApp Trigger",
+      "doc": "docs/01-whatsapp-trigger.md",
+      "responsibility": "Receber a mensagem do cliente"
+    },
+    {
+      "id": 2,
+      "name": "Context Normalization",
+      "doc": "docs/02-context-normalization.md",
+      "responsibility": "Padronizar os dados de entrada"
+    },
+    {
+      "id": 3,
+      "name": "Intent Classification",
+      "doc": "docs/03-intent-classification.md",
+      "responsibility": "Classificar a intenção do cliente"
+    },
+    {
+      "id": 4,
+      "name": "Knowledge Base Lookup",
+      "doc": "docs/04-knowledge-base.md",
+      "responsibility": "Consultar a base de conhecimento"
+    },
+    {
+      "id": 5,
+      "name": "Business Hours Check",
+      "doc": "docs/05-business-hours.md",
+      "responsibility": "Verificar horário de funcionamento"
+    },
+    {
+      "id": 6,
+      "name": "Service Mapping",
+      "doc": "docs/06-service-mapping.md",
+      "responsibility": "Mapear serviço e duração"
+    },
+    {
+      "id": 7,
+      "name": "Google Calendar FreeBusy",
+      "doc": "docs/07-calendar-freebusy.md",
+      "responsibility": "Buscar disponibilidade no calendário"
+    },
+    {
+      "id": 8,
+      "name": "Slot Selection",
+      "doc": "docs/08-slot-selection.md",
+      "responsibility": "Selecionar até 3 horários"
+    },
+    {
+      "id": 9,
+      "name": "Customer Choice Capture",
+      "doc": "docs/09-customer-choice.md",
+      "responsibility": "Capturar escolha do cliente"
+    },
+    {
+      "id": 10,
+      "name": "Create Calendar Event",
+      "doc": "docs/10-create-calendar-event.md",
+      "responsibility": "Criar evento no Google Calendar"
+    },
+    {
+      "id": 11,
+      "name": "Confirmation Message",
+      "doc": "docs/11-confirmation-message.md",
+      "responsibility": "Confirmar agendamento no WhatsApp"
+    },
+    {
+      "id": 12,
+      "name": "Reminder Scheduling",
+      "doc": "docs/12-reminders.md",
+      "responsibility": "Agendar lembretes automáticos"
+    },
+    {
+      "id": 13,
+      "name": "Cancellation",
+      "doc": "docs/13-cancellation.md",
+      "responsibility": "Cancelar agendamento"
+    },
+    {
+      "id": 14,
+      "name": "Rescheduling",
+      "doc": "docs/14-rescheduling.md",
+      "responsibility": "Reagendar atendimento"
+    },
+    {
+      "id": 15,
+      "name": "Human Handoff",
+      "doc": "docs/15-human-handoff.md",
+      "responsibility": "Escalonar para humano"
+    },
+    {
+      "id": 16,
+      "name": "Safe Close",
+      "doc": "docs/16-safe-close.md",
+      "responsibility": "Encerrar o fluxo com segurança"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "contract": "human_handoff",
+  "description": "Payload encaminhado para o canal humano quando o agente precisa pausar a automação.",
+  "required": ["customer", "reason", "conversationHistory", "currentStatus"],
+  "optional": ["appointment", "tags"],
+  "exampleShape": {
+    "customer": {
+      "name": "Maria",
+      "phone": "+5511999999999"
+    },
+    "reason": "payment_issue",
+    "conversationHistory": [
+      {
+        "from": "customer",
+        "text": "Quero reembolso"
+      },
+      {
+        "from": "agent",
+        "text": "Vou encaminhar você para um atendente humano."
+      }
+    ],
+    "currentStatus": "paused_for_human",
+    "appointment": {
+      "eventId": "abc123",
+      "service": "Escova"
+    },
+    "tags": ["financeiro", "handoff"]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "messageId": "wamid.HBgLM3",
+  "from": "+5511988887777",
+  "profileName": "Carlos",
+  "timestamp": "2026-04-21T13:00:00-03:00",
+  "type": "text",
+  "text": {
+    "body": "Preciso cancelar meu agendamento de amanhã"
+  },
+  "context": {
+    "isReturningCustomer": true,
+    "eventId": "evt_cancel_123"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "evt_789",
+  "status": "confirmed",
+  "htmlLink": "https://calendar.google.com/calendar/event?eid=example",
+  "summary": "Manicure — Ana",
+  "start": {
+    "dateTime": "2026-04-22T10:00:00-03:00",
+    "timeZone": "America/Sao_Paulo"
+  },
+  "end": {
+    "dateTime": "2026-04-22T10:45:00-03:00",
+    "timeZone": "America/Sao_Paulo"
+  }
+}

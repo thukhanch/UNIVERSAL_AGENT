@@ -1,0 +1,23 @@
+{
+  "customer": {
+    "name": "Carlos",
+    "phone": "+5511988887777"
+  },
+  "reason": "refund_request",
+  "conversationHistory": [
+    {
+      "from": "customer",
+      "text": "Quero meu dinheiro de volta"
+    },
+    {
+      "from": "agent",
+      "text": "Vou encaminhar seu caso para um atendente humano agora."
+    }
+  ],
+  "currentStatus": "paused_for_human",
+  "appointment": {
+    "eventId": "evt_cancel_123",
+    "service": "Coloração"
+  },
+  "tags": ["financeiro", "reembolso"]
+}

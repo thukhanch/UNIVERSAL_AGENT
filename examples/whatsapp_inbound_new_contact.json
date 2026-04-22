@@ -1,0 +1,13 @@
+{
+  "messageId": "wamid.HBgLM1",
+  "from": "+5511991112222",
+  "profileName": "Ana",
+  "timestamp": "2026-04-21T09:10:00-03:00",
+  "type": "text",
+  "text": {
+    "body": "Oi, quero saber horários para manicure"
+  },
+  "context": {
+    "isReturningCustomer": false
+  }
+}
