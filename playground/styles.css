@@ -1,0 +1,51 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #111827;
+  color: #f9fafb;
+  margin: 0;
+  padding: 24px;
+}
+
+.app {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.panel {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 12px;
+}
+
+input, select, textarea, button {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #4b5563;
+  background: #111827;
+  color: #f9fafb;
+  box-sizing: border-box;
+}
+
+textarea {
+  min-height: 120px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+}

@@ -1,14 +1,14 @@
-const fs = require('fs');
 const path = require('path');
+const { readJson, writeJson } = require('../lib/file-store');
 
 const calendarPath = path.join(__dirname, '..', 'data', 'mock_calendar.json');
 
 function readCalendar() {
-  return JSON.parse(fs.readFileSync(calendarPath, 'utf8'));
+  return readJson(calendarPath);
 }
 
 function writeCalendar(data) {
-  fs.writeFileSync(calendarPath, JSON.stringify(data, null, 2));
+  writeJson(calendarPath, data);
 }
 
 function getAvailability() {

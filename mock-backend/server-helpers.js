@@ -1,5 +1,5 @@
-const fs = require('fs');
 const path = require('path');
+const { readJson, writeJson } = require('./lib/file-store');
 
 const conversationsPath = path.join(__dirname, 'data', 'mock_conversations.json');
 
@@ -36,7 +36,7 @@ function buildResponse(body, intent) {
 }
 
 function saveConversation(body, intent, response) {
-  const store = JSON.parse(fs.readFileSync(conversationsPath, 'utf8'));
+  const store = readJson(conversationsPath);
   store.conversations.push({
     at: new Date().toISOString(),
     from: body.from || 'desconhecido',
@@ -44,7 +44,7 @@ function saveConversation(body, intent, response) {
     input: body,
     response
   });
-  fs.writeFileSync(conversationsPath, JSON.stringify(store, null, 2));
+  writeJson(conversationsPath, store);
 }
 
 module.exports = { classifyIntent, buildResponse, saveConversation };

@@ -5,6 +5,7 @@
   "description": "Mock backend para testar o fluxo do UNIVERSAL_AGENT ponta a ponta.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   }
 }

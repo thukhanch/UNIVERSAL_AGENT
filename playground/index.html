@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UNIVERSAL_AGENT Playground</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app">
+    <h1>UNIVERSAL_AGENT Playground</h1>
+    <p>Interface simples para testar o mock backend local.</p>
+
+    <section class="panel">
+      <label>Nome
+        <input id="profileName" value="Ana" />
+      </label>
+      <label>Telefone
+        <input id="from" value="+5511991112222" />
+      </label>
+      <label>Tipo
+        <select id="type">
+          <option value="text">text</option>
+          <option value="audio">audio</option>
+        </select>
+      </label>
+      <label>Mensagem
+        <textarea id="message">Oi, quero saber horários para manicure</textarea>
+      </label>
+
+      <div class="actions">
+        <button data-scenario="schedule">Agendamento</button>
+        <button data-scenario="cancel">Cancelamento</button>
+        <button data-scenario="refund">Reembolso</button>
+        <button data-scenario="complaint">Reclamação</button>
+        <button id="sendBtn">Enviar</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Resposta</h2>
+      <pre id="output">Aguardando teste...</pre>
+    </section>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>

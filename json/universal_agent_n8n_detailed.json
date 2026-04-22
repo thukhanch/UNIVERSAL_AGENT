@@ -1,0 +1,214 @@
+{
+  "name": "UNIVERSAL_AGENT_DETAILED",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-inbound-detailed",
+        "responseMode": "responseNode"
+      },
+      "id": "n1",
+      "name": "WhatsApp Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [120, 280]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "n2",
+      "name": "Normalize Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [340, 280]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "n3",
+      "name": "Classify Intent",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [560, 280]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            { "conditions": { "conditions": [{ "leftValue": "={{$json.intent}}", "rightValue": "schedule", "operator": { "type": "string", "operation": "equals" } }] }, "renameOutput": true, "outputKey": "schedule" },
+            { "conditions": { "conditions": [{ "leftValue": "={{$json.intent}}", "rightValue": "cancel", "operator": { "type": "string", "operation": "equals" } }] }, "renameOutput": true, "outputKey": "cancel" },
+            { "conditions": { "conditions": [{ "leftValue": "={{$json.intent}}", "rightValue": "reschedule", "operator": { "type": "string", "operation": "equals" } }] }, "renameOutput": true, "outputKey": "reschedule" },
+            { "conditions": { "conditions": [{ "leftValue": "={{$json.intent}}", "rightValue": "payment", "operator": { "type": "string", "operation": "equals" } }] }, "renameOutput": true, "outputKey": "payment" },
+            { "conditions": { "conditions": [{ "leftValue": "={{$json.intent}}", "rightValue": "complaint", "operator": { "type": "string", "operation": "equals" } }] }, "renameOutput": true, "outputKey": "complaint" }
+          ]
+        }
+      },
+      "id": "n4",
+      "name": "Intent Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [780, 280]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "n5",
+      "name": "Knowledge Base Lookup",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1000, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "n6",
+      "name": "Business Hours Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1220, 160]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3010/calendar/freebusy"
+      },
+      "id": "n7",
+      "name": "Google Calendar FreeBusy",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1440, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "n8",
+      "name": "Select 3 Slots",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1660, 160]
+    },
+    {
+      "parameters": {
+        "mode": "waitForWebhook"
+      },
+      "id": "n9",
+      "name": "Wait Customer Choice",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1880, 160]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3010/calendar/events",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.eventCreateRequest}}"
+      },
+      "id": "n10",
+      "name": "Create Calendar Event",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2100, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "n11",
+      "name": "Send Confirmation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2320, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "n12",
+      "name": "Schedule Reminders",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2540, 160]
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=http://localhost:3010/calendar/events/{{$json.eventId}}"
+      },
+      "id": "n13",
+      "name": "Cancel Event",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1000, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items;"
+      },
+      "id": "n14",
+      "name": "Reschedule Flow",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1000, 520]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3010/whatsapp",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json}}"
+      },
+      "id": "n15",
+      "name": "Human Handoff",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1000, 640]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}"
+      },
+      "id": "n16",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2760, 280]
+    }
+  ],
+  "connections": {
+    "WhatsApp Trigger": { "main": [[{ "node": "Normalize Context", "type": "main", "index": 0 }]] },
+    "Normalize Context": { "main": [[{ "node": "Classify Intent", "type": "main", "index": 0 }]] },
+    "Classify Intent": { "main": [[{ "node": "Intent Router", "type": "main", "index": 0 }]] },
+    "Intent Router": {
+      "main": [
+        [{ "node": "Knowledge Base Lookup", "type": "main", "index": 0 }],
+        [{ "node": "Cancel Event", "type": "main", "index": 0 }],
+        [{ "node": "Reschedule Flow", "type": "main", "index": 0 }],
+        [{ "node": "Human Handoff", "type": "main", "index": 0 }],
+        [{ "node": "Human Handoff", "type": "main", "index": 0 }]
+      ]
+    },
+    "Knowledge Base Lookup": { "main": [[{ "node": "Business Hours Check", "type": "main", "index": 0 }]] },
+    "Business Hours Check": { "main": [[{ "node": "Google Calendar FreeBusy", "type": "main", "index": 0 }]] },
+    "Google Calendar FreeBusy": { "main": [[{ "node": "Select 3 Slots", "type": "main", "index": 0 }]] },
+    "Select 3 Slots": { "main": [[{ "node": "Wait Customer Choice", "type": "main", "index": 0 }]] },
+    "Wait Customer Choice": { "main": [[{ "node": "Create Calendar Event", "type": "main", "index": 0 }]] },
+    "Create Calendar Event": { "main": [[{ "node": "Send Confirmation", "type": "main", "index": 0 }]] },
+    "Send Confirmation": { "main": [[{ "node": "Schedule Reminders", "type": "main", "index": 0 }]] },
+    "Schedule Reminders": { "main": [[{ "node": "Webhook Response", "type": "main", "index": 0 }]] },
+    "Cancel Event": { "main": [[{ "node": "Webhook Response", "type": "main", "index": 0 }]] },
+    "Reschedule Flow": { "main": [[{ "node": "Google Calendar FreeBusy", "type": "main", "index": 0 }]] },
+    "Human Handoff": { "main": [[{ "node": "Webhook Response", "type": "main", "index": 0 }]] }
+  },
+  "meta": {
+    "notes": "Workflow detalhado para testes locais com backend mock e maior proximidade com o fluxo documentado."
+  }
+}
