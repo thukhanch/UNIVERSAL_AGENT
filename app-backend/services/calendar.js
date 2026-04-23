@@ -1,10 +1,56 @@
 const config = require('../config');
-const { readStore, writeStore, appendLog } = require('../lib/storage');
+const { readStore, writeStore, appendLog, appendAppointment } = require('../lib/storage');
+const { hasRealCalendarConfig } = require('../lib/guards');
+
+function buildGoogleRequest(action, payload = {}) {
+  if (!hasRealCalendarConfig()) {
+    return {
+      provider: 'google',
+      prepared: false,
+      error: 'Missing GOOGLE_API_KEY or CALENDARIO_ID'
+    };
+  }
+
+  if (action === 'freebusy') {
+    return {
+      provider: 'google',
+      prepared: true,
+      method: 'POST',
+      url: 'https://www.googleapis.com/calendar/v3/freeBusy',
+      calendarId: config.calendarId,
+      apiKeyPresent: true
+    };
+  }
+
+  if (action === 'create') {
+    return {
+      provider: 'google',
+      prepared: true,
+      method: 'POST',
+      url: `https://www.googleapis.com/calendar/v3/calendars/${config.calendarId}/events`,
+      body: payload,
+      apiKeyPresent: true
+    };
+  }
+
+  if (action === 'cancel') {
+    return {
+      provider: 'google',
+      prepared: true,
+      method: 'DELETE',
+      url: `https://www.googleapis.com/calendar/v3/calendars/${config.calendarId}/events/${payload.appointmentId}`,
+      apiKeyPresent: true
+    };
+  }
+
+  return { provider: 'google', prepared: false, error: 'Unsupported action' };
+}
 
 function listBusySlots() {
-  if (config.calendarProvider === 'real') {
-    appendLog('calendar.real.freebusy.prepared', { calendarId: config.calendarId });
-    return { provider: 'real', prepared: true, calendarId: config.calendarId };
+  if (config.calendarProvider === 'google') {
+    const request = buildGoogleRequest('freebusy');
+    appendLog('calendar.google.freebusy.prepared', request);
+    return request;
   }
 
   return {
@@ -17,15 +63,25 @@ function listBusySlots() {
 }
 
 function createAppointment(event) {
-  const store = readStore();
+  if (config.calendarProvider === 'google') {
+    const request = buildGoogleRequest('create', event);
+    appendLog('calendar.google.create.prepared', request);
+    return request;
+  }
+
   const appointment = { id: `appt_${Date.now()}`, provider: config.calendarProvider, ...event };
-  store.appointments.push(appointment);
-  writeStore(store);
+  appendAppointment(appointment);
   appendLog('calendar.create', appointment);
   return appointment;
 }
 
 function cancelAppointment(appointmentId) {
+  if (config.calendarProvider === 'google') {
+    const request = buildGoogleRequest('cancel', { appointmentId });
+    appendLog('calendar.google.cancel.prepared', request);
+    return request;
+  }
+
   const store = readStore();
   store.appointments = store.appointments.filter((item) => item.id !== appointmentId);
   writeStore(store);
@@ -33,4 +89,4 @@ function cancelAppointment(appointmentId) {
   return { cancelled: true, appointmentId, provider: config.calendarProvider };
 }
 
-module.exports = { listBusySlots, createAppointment, cancelAppointment };
+module.exports = { listBusySlots, createAppointment, cancelAppointment, buildGoogleRequest };

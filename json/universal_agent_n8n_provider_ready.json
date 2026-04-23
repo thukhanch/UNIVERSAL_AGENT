@@ -1,0 +1,119 @@
+{
+  "name": "UNIVERSAL_AGENT_PROVIDER_READY",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "provider-ready-whatsapp",
+        "responseMode": "responseNode"
+      },
+      "id": "pr1",
+      "name": "WhatsApp Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [120, 260]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3020/webhooks/whatsapp",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json}}"
+      },
+      "id": "pr2",
+      "name": "App Backend WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [360, 260]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.data.intent}}",
+              "operation": "equal",
+              "value2": "schedule"
+            },
+            {
+              "value1": "={{$json.data.intent}}",
+              "operation": "equal",
+              "value2": "reschedule"
+            }
+          ]
+        }
+      },
+      "id": "pr3",
+      "name": "Intent Router",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [600, 260]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://localhost:3020/calendar/freebusy"
+      },
+      "id": "pr4",
+      "name": "App Backend FreeBusy",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [840, 180]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3020/calendar/events",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.eventCreateRequest || { summary: 'Atendimento UNIVERSAL_AGENT', description: 'Evento preparado pelo workflow provider-ready', start: { dateTime: '2026-04-22T10:00:00-03:00', timeZone: 'America/Sao_Paulo' }, end: { dateTime: '2026-04-22T11:00:00-03:00', timeZone: 'America/Sao_Paulo' } }}}"
+      },
+      "id": "pr5",
+      "name": "App Backend Create Event",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1080, 180]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}"
+      },
+      "id": "pr6",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1320, 260]
+    }
+  ],
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [[{ "node": "App Backend WhatsApp", "type": "main", "index": 0 }]]
+    },
+    "App Backend WhatsApp": {
+      "main": [[{ "node": "Intent Router", "type": "main", "index": 0 }]]
+    },
+    "Intent Router": {
+      "main": [
+        [{ "node": "App Backend FreeBusy", "type": "main", "index": 0 }],
+        [{ "node": "Webhook Response", "type": "main", "index": 0 }]
+      ]
+    },
+    "App Backend FreeBusy": {
+      "main": [[{ "node": "App Backend Create Event", "type": "main", "index": 0 }]]
+    },
+    "App Backend Create Event": {
+      "main": [[{ "node": "Webhook Response", "type": "main", "index": 0 }]]
+    }
+  },
+  "meta": {
+    "notes": [
+      "Fluxo pensado para o app-backend na porta 3020.",
+      "Em mock, o backend responde com dados locais e persiste no store.json.",
+      "Em provider-ready, o backend prepara payload Meta e requests Google Calendar sem precisar derrubar o servidor quando faltarem credenciais.",
+      "As respostas do app-backend seguem envelope { status, data } ou { status, error }.",
+      "Antes de produção real, substituir localhost por URL pública e configurar credenciais válidas."
+    ]
+  }
+}

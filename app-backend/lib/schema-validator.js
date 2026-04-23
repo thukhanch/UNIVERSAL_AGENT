@@ -12,8 +12,9 @@ function validateRequired(payload, schemaFile) {
   const missing = (schema.required || []).filter((field) => payload[field] === undefined);
   const nestedErrors = [];
 
-  if (schemaFile === 'whatsapp_inbound.schema.json' && payload.type === 'text' && !payload.text?.body) {
-    nestedErrors.push('text.body');
+  if (schemaFile === 'whatsapp_inbound.schema.json') {
+    if (payload.type === 'text' && !payload.text?.body) nestedErrors.push('text.body');
+    if (payload.type === 'audio' && !payload.audio?.id) nestedErrors.push('audio.id');
   }
 
   if (schemaFile === 'google_calendar_event_create.schema.json') {
@@ -21,6 +22,14 @@ function validateRequired(payload, schemaFile) {
     if (!payload.start?.timeZone) nestedErrors.push('start.timeZone');
     if (!payload.end?.dateTime) nestedErrors.push('end.dateTime');
     if (!payload.end?.timeZone) nestedErrors.push('end.timeZone');
+  }
+
+  if (schemaFile === 'human_handoff.schema.json') {
+    if (!payload.customer?.name) nestedErrors.push('customer.name');
+    if (!payload.customer?.phone) nestedErrors.push('customer.phone');
+    if (!Array.isArray(payload.conversationHistory) || payload.conversationHistory.length === 0) {
+      nestedErrors.push('conversationHistory');
+    }
   }
 
   return {
@@ -31,4 +40,12 @@ function validateRequired(payload, schemaFile) {
   };
 }
 
-module.exports = { validateRequired };
+function validateConfig(requiredPairs) {
+  const missing = requiredPairs.filter(({ value }) => !value || value === 'replace-me').map(({ name }) => name);
+  return {
+    valid: missing.length === 0,
+    missing
+  };
+}
+
+module.exports = { validateRequired, validateConfig };

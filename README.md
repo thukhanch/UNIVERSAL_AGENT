@@ -114,7 +114,7 @@ Mini API REST local para testar o fluxo ponta a ponta sem integrações reais.
 
 ### Pasta `app-backend/`
 
-Backend quase-prod com modos `mock` e `provider-ready`, preparado para migrar depois para integrações reais.
+Backend quase-prod com modos `mock` e `provider-ready`, preparado para migrar depois para integrações reais, com providers configuráveis para WhatsApp e Google Calendar.
 
 ### Pasta `playground/`
 
@@ -185,11 +185,35 @@ Use `playground/` para enviar cenários rápidos ao backend e visualizar o retor
 
 Use `mock-backend/` para demonstração rápida e `app-backend/` quando quiser testar uma arquitetura mais próxima de produção.
 
-### Etapa 11 — planejar evolução de deploy
+### Etapa 11 — selecionar o modo do `app-backend`
+
+Para testes rápidos sem credenciais reais:
+- `APP_MODE=mock`
+- `WHATSAPP_PROVIDER=mock`
+- `CALENDAR_PROVIDER=mock`
+
+Para preparação de integração real:
+- `APP_MODE=provider-ready`
+- `WHATSAPP_PROVIDER=meta`
+- `CALENDAR_PROVIDER=google`
+
+No modo `provider-ready`, o backend continua subindo mesmo sem credenciais válidas, mas retorna erros claros de configuração ausente nas respostas preparadas para provider.
+
+### Etapa 12 — validar configuração mínima
+
+Antes de ligar providers reais, confira:
+- `WHATSAPP_ACCESS_TOKEN`
+- `WHATSAPP_PHONE_NUMBER_ID`
+- `GOOGLE_API_KEY`
+- `CALENDARIO_ID`
+- `TELEFONE_HUMANO`
+- `ADMIN_TOKEN`
+
+### Etapa 13 — planejar evolução de deploy
 
 Use `deploy/` para mapear variáveis, arquitetura e próximos passos de saída do modo mock.
 
-### Etapa 12 — revisar regras críticas
+### Etapa 14 — revisar regras críticas
 
 Antes de produção, confirme que o fluxo:
 - não inventa respostas
@@ -225,9 +249,11 @@ Fluxos paralelos:
 - `json/universal_agent_n8n_importable.json` já se aproxima mais de um export/import do n8n, mas ainda precisa de credenciais e ajustes reais.
 - `json/universal_agent_n8n_detailed.json` aproxima ainda mais o fluxo do desenho operacional completo.
 - `json/universal_agent_n8n_app_backend.json` aponta para o backend mais próximo de produção.
+- `json/universal_agent_n8n_provider_ready.json` documenta um fluxo mais fiel à operação do `app-backend` em modo provider-ready.
 - Os contratos de API em `api/` são documentais e os schemas em `schemas/` formalizam a estrutura esperada.
 - A pasta `mock-backend/` funciona como mini API REST de prototipagem local.
 - A pasta `app-backend/` introduz uma arquitetura quase-prod com providers configuráveis.
+- O `app-backend` preserva o modo `mock` para validação local e o modo `provider-ready` para preparar integração real sem quebrar o servidor quando faltarem credenciais.
 - A pasta `playground/` fornece uma forma visual simples de testar o backend.
 - A pasta `deploy/` documenta a passagem da camada mock para uma futura camada real.
 - O projeto foi organizado para imitar o raciocínio visual de um fluxo n8n e reduzir a distância entre documentação e execução.

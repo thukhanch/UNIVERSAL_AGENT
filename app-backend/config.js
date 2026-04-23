@@ -5,6 +5,7 @@ module.exports = {
   mode: process.env.APP_MODE || 'mock',
   whatsappProvider: process.env.WHATSAPP_PROVIDER || 'mock',
   calendarProvider: process.env.CALENDAR_PROVIDER || 'mock',
+  adminToken: process.env.ADMIN_TOKEN || 'replace-me',
   whatsappAccessToken: process.env.WHATSAPP_ACCESS_TOKEN || 'replace-me',
   whatsappPhoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID || 'replace-me',
   googleApiKey: process.env.GOOGLE_API_KEY || 'replace-me',

@@ -15,4 +15,22 @@ function appendLog(type, payload) {
   writeStore(store);
 }
 
-module.exports = { readStore, writeStore, appendLog };
+function appendConversation(entry) {
+  const store = readStore();
+  store.conversations.push(entry);
+  writeStore(store);
+}
+
+function appendAppointment(entry) {
+  const store = readStore();
+  store.appointments.push(entry);
+  writeStore(store);
+}
+
+function appendHandoff(entry) {
+  const store = readStore();
+  store.handoffs.push(entry);
+  writeStore(store);
+}
+
+module.exports = { readStore, writeStore, appendLog, appendConversation, appendAppointment, appendHandoff };
