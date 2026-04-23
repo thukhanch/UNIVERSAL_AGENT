@@ -22,6 +22,8 @@
 - modo provider-ready `live` com erros claros quando faltar configuração
 - modo provider-ready `live` com erro remoto 4xx/5xx normalizado
 - modo provider-ready `live` com sucesso remoto registrado em logs
+- Google Calendar `live` autenticando por service account
+- rota admin protegida por `x-admin-token`
 
 ## Fluxos funcionais
 - agendamento

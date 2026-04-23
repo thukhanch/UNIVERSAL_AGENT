@@ -28,18 +28,19 @@ function getWhatsAppExecutionGuard() {
 
 function getCalendarExecutionGuard() {
   if (config.calendarProvider !== 'google') {
-    return { valid: true, missing: [], mode: config.calendarExecutionMode };
+    return { valid: true, missing: [], mode: config.calendarExecutionMode, authMode: 'none' };
   }
 
   if (config.calendarExecutionMode !== 'live') {
-    return { valid: true, missing: [], mode: config.calendarExecutionMode };
+    return { valid: true, missing: [], mode: config.calendarExecutionMode, authMode: 'prepared' };
   }
 
   const missing = [];
-  if (config.googleApiKey === 'replace-me') missing.push('GOOGLE_API_KEY');
+  if (config.googleServiceAccountEmail === 'replace-me') missing.push('GOOGLE_SERVICE_ACCOUNT_EMAIL');
+  if (config.googleServiceAccountPrivateKey === 'replace-me') missing.push('GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY');
   if (config.calendarId === 'replace-me') missing.push('CALENDARIO_ID');
 
-  return { valid: missing.length === 0, missing, mode: config.calendarExecutionMode };
+  return { valid: missing.length === 0, missing, mode: config.calendarExecutionMode, authMode: 'service-account' };
 }
 
 function getProviderWarnings() {

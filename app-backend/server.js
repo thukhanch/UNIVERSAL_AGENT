@@ -4,6 +4,7 @@ const { sendJson, ok, fail } = require('./lib/http');
 const { healthCheck } = require('./routes/health');
 const { getMessageCatalog } = require('./routes/messages');
 const { handleWhatsAppWebhook } = require('./routes/webhooks');
+const { handleAdminSmokeTest } = require('./routes/admin');
 const { listBusySlots, createAppointment, cancelAppointment } = require('./services/calendar');
 const { validateRequired } = require('./lib/schema-validator');
 
@@ -32,6 +33,13 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === 'GET' && req.url === '/messages/catalog') {
       sendJson(res, 200, ok(getMessageCatalog()));
+      return;
+    }
+
+    if (req.method === 'POST' && req.url === '/admin/providers/smoke-test') {
+      const body = await parseBody(req);
+      const result = await handleAdminSmokeTest(req, body);
+      sendJson(res, result.statusCode, result.payload);
       return;
     }
 

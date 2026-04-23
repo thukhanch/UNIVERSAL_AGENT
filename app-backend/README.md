@@ -30,11 +30,14 @@ Oferecer uma estrutura organizada para migrar gradualmente do modo local para in
 - `provider-ready` agora pode operar em `prepared` ou `live`.
 - `prepared` preserva a validação sem chamar providers externos.
 - `live` usa as mesmas rotas do backend e executa as chamadas HTTP reais.
+- no Google Calendar, o modo `live` recomendado usa service account.
+- o smoke test administrativo protegido usa `POST /admin/providers/smoke-test` com `x-admin-token`.
 
 ## Endpoints esperados
 
 - `GET /health`
 - `GET /messages/catalog`
+- `POST /admin/providers/smoke-test`
 - `POST /webhooks/whatsapp`
 - `GET /calendar/freebusy`
 - `POST /calendar/events`

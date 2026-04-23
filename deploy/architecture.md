@@ -31,6 +31,7 @@
 - foco em preparar e depois executar a camada de integração real
 - requests e payloads são montados no formato esperado pelos providers
 - `prepared` só prepara chamadas; `live` executa chamadas HTTP reais
+- no Google Calendar, `live` deve usar service account para obter Bearer token OAuth 2.0
 - erros de configuração são retornados de forma explícita
 - servidor continua saudável mesmo sem credenciais válidas
 

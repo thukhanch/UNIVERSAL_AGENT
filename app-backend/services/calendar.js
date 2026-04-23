@@ -1,16 +1,17 @@
 const config = require('../config');
 const { readStore, writeStore, appendLog, appendAppointment } = require('../lib/storage');
-const { hasRealCalendarConfig, getCalendarExecutionGuard } = require('../lib/guards');
+const { getCalendarExecutionGuard } = require('../lib/guards');
 const { executeJsonRequest } = require('../lib/http-client');
+const { getGoogleAccessToken } = require('../lib/google-auth');
 
 function buildGoogleRequest(action, payload = {}) {
-  if (!hasRealCalendarConfig()) {
+  if (config.calendarId === 'replace-me') {
     return {
       provider: 'google',
       prepared: false,
       executed: false,
       executionMode: config.calendarExecutionMode,
-      error: 'Missing GOOGLE_API_KEY or CALENDARIO_ID'
+      error: 'Missing CALENDARIO_ID'
     };
   }
 
@@ -83,12 +84,14 @@ async function executeGoogleRequest(request, logType) {
   }
 
   try {
-    const separator = request.url.includes('?') ? '&' : '?';
-    const liveUrl = `${request.url}${separator}key=${encodeURIComponent(config.googleApiKey)}`;
+    const accessToken = await getGoogleAccessToken();
     const remote = await executeJsonRequest({
       method: request.method,
-      url: liveUrl,
-      headers: request.headers,
+      url: request.url,
+      headers: {
+        ...request.headers,
+        Authorization: `Bearer ${accessToken}`
+      },
       body: request.body || null
     });
 
@@ -96,11 +99,13 @@ async function executeGoogleRequest(request, logType) {
       ...request,
       executed: true,
       remoteStatus: remote.statusCode,
-      remoteResponse: remote.body
+      remoteResponse: remote.body,
+      authMode: guard.authMode
     };
 
     appendLog(logType, {
       executionMode: config.calendarExecutionMode,
+      authMode: guard.authMode,
       method: request.method,
       url: request.url,
       remoteStatus: remote.statusCode,

@@ -204,7 +204,8 @@ No modo `provider-ready`, o backend continua subindo mesmo sem credenciais váli
 Antes de ligar providers reais, confira:
 - `WHATSAPP_ACCESS_TOKEN`
 - `WHATSAPP_PHONE_NUMBER_ID`
-- `GOOGLE_API_KEY`
+- `GOOGLE_SERVICE_ACCOUNT_EMAIL`
+- `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`
 - `CALENDARIO_ID`
 - `TELEFONE_HUMANO`
 - `ADMIN_TOKEN`

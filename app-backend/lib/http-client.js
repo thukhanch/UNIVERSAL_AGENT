@@ -12,11 +12,11 @@ function parseJsonSafely(text) {
   }
 }
 
-function executeJsonRequest({ method = 'GET', url, headers = {}, body = null, timeoutMs = config.httpTimeoutMs }) {
+function executeJsonRequest({ method = 'GET', url, headers = {}, body = null, timeoutMs = config.httpTimeoutMs, formBody = null }) {
   return new Promise((resolve, reject) => {
     const target = new URL(url);
     const transport = target.protocol === 'https:' ? https : http;
-    const payload = body ? JSON.stringify(body) : null;
+    const payload = body ? JSON.stringify(body) : formBody;
 
     const request = transport.request({
       protocol: target.protocol,
@@ -25,7 +25,8 @@ function executeJsonRequest({ method = 'GET', url, headers = {}, body = null, ti
       path: `${target.pathname}${target.search}`,
       method,
       headers: {
-        ...(payload ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) } : {}),
+        ...(body ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) } : {}),
+        ...(formBody ? { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': Buffer.byteLength(payload) } : {}),
         ...headers
       }
     }, (response) => {

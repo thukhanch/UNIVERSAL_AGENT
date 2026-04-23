@@ -56,9 +56,14 @@ Para WhatsApp Meta:
 - `WHATSAPP_ACCESS_TOKEN`
 - `WHATSAPP_PHONE_NUMBER_ID`
 
-Para Google Calendar:
-- `GOOGLE_API_KEY`
+Para Google Calendar em produção real:
+- `GOOGLE_SERVICE_ACCOUNT_EMAIL`
+- `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`
 - `CALENDARIO_ID`
+
+`GOOGLE_API_KEY` pode continuar existindo como compatibilidade/documentação temporária, mas a rota recomendada para `live` é service account.
+
+Use a private key no `.env` com `\n` e deixe o backend normalizar para quebras de linha reais.
 
 Para operação geral:
 - `TELEFONE_HUMANO`
@@ -91,4 +96,6 @@ Para operação geral:
 4. Confirmar mensagens claras de configuração ausente
 5. Inserir credenciais reais
 6. Substituir requests preparados por chamadas autenticadas reais
-7. Publicar webhook externo e ajustar workflow n8n
+7. Configurar service account do Google Calendar
+8. Validar `/admin/providers/smoke-test` com `x-admin-token`
+9. Publicar webhook externo e ajustar workflow n8n
