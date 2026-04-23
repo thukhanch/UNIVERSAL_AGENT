@@ -197,7 +197,7 @@ Para preparação de integração real:
 - `WHATSAPP_PROVIDER=meta`
 - `CALENDAR_PROVIDER=google`
 
-No modo `provider-ready`, o backend continua subindo mesmo sem credenciais válidas, mas retorna erros claros de configuração ausente nas respostas preparadas para provider.
+No modo `provider-ready`, o backend continua subindo mesmo sem credenciais válidas. Com execution mode `prepared`, ele só monta requests/payloads; com execution mode `live`, ele executa chamadas externas reais e retorna erros claros quando faltar configuração.
 
 ### Etapa 12 — validar configuração mínima
 

@@ -1,12 +1,15 @@
 const config = require('../config');
 const { readStore, writeStore, appendLog, appendAppointment } = require('../lib/storage');
-const { hasRealCalendarConfig } = require('../lib/guards');
+const { hasRealCalendarConfig, getCalendarExecutionGuard } = require('../lib/guards');
+const { executeJsonRequest } = require('../lib/http-client');
 
 function buildGoogleRequest(action, payload = {}) {
   if (!hasRealCalendarConfig()) {
     return {
       provider: 'google',
       prepared: false,
+      executed: false,
+      executionMode: config.calendarExecutionMode,
       error: 'Missing GOOGLE_API_KEY or CALENDARIO_ID'
     };
   }
@@ -15,9 +18,17 @@ function buildGoogleRequest(action, payload = {}) {
     return {
       provider: 'google',
       prepared: true,
+      executed: false,
+      executionMode: config.calendarExecutionMode,
       method: 'POST',
-      url: 'https://www.googleapis.com/calendar/v3/freeBusy',
+      url: `${config.googleCalendarBaseUrl}/freeBusy`,
       calendarId: config.calendarId,
+      headers: {},
+      body: {
+        timeMin: payload.timeMin || new Date().toISOString(),
+        timeMax: payload.timeMax || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        items: [{ id: config.calendarId }]
+      },
       apiKeyPresent: true
     };
   }
@@ -26,9 +37,12 @@ function buildGoogleRequest(action, payload = {}) {
     return {
       provider: 'google',
       prepared: true,
+      executed: false,
+      executionMode: config.calendarExecutionMode,
       method: 'POST',
-      url: `https://www.googleapis.com/calendar/v3/calendars/${config.calendarId}/events`,
+      url: `${config.googleCalendarBaseUrl}/calendars/${config.calendarId}/events`,
       body: payload,
+      headers: {},
       apiKeyPresent: true
     };
   }
@@ -37,24 +51,94 @@ function buildGoogleRequest(action, payload = {}) {
     return {
       provider: 'google',
       prepared: true,
+      executed: false,
+      executionMode: config.calendarExecutionMode,
       method: 'DELETE',
-      url: `https://www.googleapis.com/calendar/v3/calendars/${config.calendarId}/events/${payload.appointmentId}`,
+      url: `${config.googleCalendarBaseUrl}/calendars/${config.calendarId}/events/${payload.appointmentId}`,
+      headers: {},
       apiKeyPresent: true
     };
   }
 
-  return { provider: 'google', prepared: false, error: 'Unsupported action' };
+  return { provider: 'google', prepared: false, executed: false, executionMode: config.calendarExecutionMode, error: 'Unsupported action' };
 }
 
-function listBusySlots() {
+async function executeGoogleRequest(request, logType) {
+  if (!request.prepared) {
+    return request;
+  }
+
+  const guard = getCalendarExecutionGuard();
+  if (!guard.valid) {
+    return {
+      ...request,
+      executed: false,
+      error: `Missing ${guard.missing.join(' or ')}`
+    };
+  }
+
+  if (config.calendarExecutionMode !== 'live') {
+    appendLog(logType, request);
+    return request;
+  }
+
+  try {
+    const separator = request.url.includes('?') ? '&' : '?';
+    const liveUrl = `${request.url}${separator}key=${encodeURIComponent(config.googleApiKey)}`;
+    const remote = await executeJsonRequest({
+      method: request.method,
+      url: liveUrl,
+      headers: request.headers,
+      body: request.body || null
+    });
+
+    const result = {
+      ...request,
+      executed: true,
+      remoteStatus: remote.statusCode,
+      remoteResponse: remote.body
+    };
+
+    appendLog(logType, {
+      executionMode: config.calendarExecutionMode,
+      method: request.method,
+      url: request.url,
+      remoteStatus: remote.statusCode,
+      remoteResponse: remote.body
+    });
+
+    if (!remote.ok) {
+      result.error = 'Google Calendar API request failed';
+    }
+
+    return result;
+  } catch (error) {
+    appendLog(`${logType}.error`, {
+      executionMode: config.calendarExecutionMode,
+      method: request.method,
+      url: request.url,
+      error: error.message
+    });
+
+    return {
+      ...request,
+      executed: true,
+      error: error.message
+    };
+  }
+}
+
+async function listBusySlots() {
   if (config.calendarProvider === 'google') {
     const request = buildGoogleRequest('freebusy');
-    appendLog('calendar.google.freebusy.prepared', request);
-    return request;
+    return executeGoogleRequest(request, 'calendar.google.freebusy');
   }
 
   return {
     provider: 'mock',
+    prepared: false,
+    executed: false,
+    executionMode: 'mock',
     busy: [
       { start: '2026-04-22T09:00:00-03:00', end: '2026-04-22T10:00:00-03:00' },
       { start: '2026-04-22T15:00:00-03:00', end: '2026-04-22T16:00:00-03:00' }
@@ -62,11 +146,10 @@ function listBusySlots() {
   };
 }
 
-function createAppointment(event) {
+async function createAppointment(event) {
   if (config.calendarProvider === 'google') {
     const request = buildGoogleRequest('create', event);
-    appendLog('calendar.google.create.prepared', request);
-    return request;
+    return executeGoogleRequest(request, 'calendar.google.create');
   }
 
   const appointment = { id: `appt_${Date.now()}`, provider: config.calendarProvider, ...event };
@@ -75,11 +158,10 @@ function createAppointment(event) {
   return appointment;
 }
 
-function cancelAppointment(appointmentId) {
+async function cancelAppointment(appointmentId) {
   if (config.calendarProvider === 'google') {
     const request = buildGoogleRequest('cancel', { appointmentId });
-    appendLog('calendar.google.cancel.prepared', request);
-    return request;
+    return executeGoogleRequest(request, 'calendar.google.cancel');
   }
 
   const store = readStore();
@@ -89,4 +171,4 @@ function cancelAppointment(appointmentId) {
   return { cancelled: true, appointmentId, provider: config.calendarProvider };
 }
 
-module.exports = { listBusySlots, createAppointment, cancelAppointment, buildGoogleRequest };
+module.exports = { listBusySlots, createAppointment, cancelAppointment, buildGoogleRequest, executeGoogleRequest };

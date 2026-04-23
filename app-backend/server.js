@@ -21,6 +21,8 @@ function parseBody(req) {
   });
 }
 
+const { getProviderWarnings } = require('./lib/guards');
+
 const server = http.createServer(async (req, res) => {
   try {
     if (req.method === 'GET' && req.url === '/health') {
@@ -35,9 +37,13 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === 'POST' && req.url === '/webhooks/whatsapp') {
       const body = await parseBody(req);
-      const result = handleWhatsAppWebhook(body);
+      const result = await handleWhatsAppWebhook(body);
       if (result.validation && !result.validation.valid) {
         sendJson(res, 400, fail('Invalid WhatsApp webhook payload', result.validation));
+        return;
+      }
+      if (result.response?.error && result.response.executed && result.response.provider === 'meta') {
+        sendJson(res, 502, fail(result.response.error, result.response));
         return;
       }
       sendJson(res, 200, ok(result));
@@ -45,7 +51,12 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === 'GET' && req.url === '/calendar/freebusy') {
-      sendJson(res, 200, ok(listBusySlots()));
+      const result = await listBusySlots();
+      if (result.error && result.executed) {
+        sendJson(res, 502, fail(result.error, result));
+        return;
+      }
+      sendJson(res, 200, ok(result));
       return;
     }
 
@@ -56,13 +67,23 @@ const server = http.createServer(async (req, res) => {
         sendJson(res, 400, fail('Invalid calendar event payload', validation));
         return;
       }
-      sendJson(res, 200, ok(createAppointment(body)));
+      const result = await createAppointment(body);
+      if (result.error && result.executed) {
+        sendJson(res, 502, fail(result.error, result));
+        return;
+      }
+      sendJson(res, 200, ok(result));
       return;
     }
 
     if (req.method === 'DELETE' && req.url.startsWith('/calendar/events/')) {
       const appointmentId = req.url.split('/').pop();
-      sendJson(res, 200, ok(cancelAppointment(appointmentId)));
+      const result = await cancelAppointment(appointmentId);
+      if (result.error && result.executed) {
+        sendJson(res, 502, fail(result.error, result));
+        return;
+      }
+      sendJson(res, 200, ok(result));
       return;
     }
 
@@ -74,4 +95,6 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(config.port, () => {
   console.log(`App backend running on http://localhost:${config.port}`);
+  const warnings = getProviderWarnings();
+  warnings.forEach((warning) => console.warn(`[provider-warning] ${warning}`));
 });

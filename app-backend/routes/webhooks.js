@@ -1,9 +1,9 @@
 const { validateRequired } = require('../lib/schema-validator');
 const { appendLog, appendConversation } = require('../lib/storage');
-const { classifyIntent, buildOutbound, logInbound } = require('../services/whatsapp');
+const { classifyIntent, buildOutbound, sendOutboundMessage, logInbound } = require('../services/whatsapp');
 const { createHandoff } = require('../services/handoff');
 
-function handleWhatsAppWebhook(body) {
+async function handleWhatsAppWebhook(body) {
   const validation = validateRequired(body, 'whatsapp_inbound.schema.json');
   if (!validation.valid) {
     return { validation, intent: null, response: null };
@@ -11,7 +11,8 @@ function handleWhatsAppWebhook(body) {
 
   logInbound(body);
   const intent = classifyIntent(body);
-  const response = buildOutbound(body, intent);
+  const outbound = buildOutbound(body, intent);
+  const response = await sendOutboundMessage(outbound);
 
   appendConversation({
     at: new Date().toISOString(),
@@ -20,7 +21,7 @@ function handleWhatsAppWebhook(body) {
     input: body,
     response
   });
-  appendLog('conversation.save', { from: body.from || 'desconhecido', intent });
+  appendLog('conversation.save', { from: body.from || 'desconhecido', intent, executionMode: response.executionMode || 'mock' });
 
   if (intent === 'payment' || intent === 'complaint') {
     return { validation, intent, response, handoff: createHandoff(body) };

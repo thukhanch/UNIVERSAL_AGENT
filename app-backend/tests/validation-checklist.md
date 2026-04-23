@@ -18,9 +18,16 @@
 
 ## Configuração
 - modo mock funcional sem credenciais reais
-- modo provider-ready com erros claros quando faltar configuração
+- modo provider-ready `prepared` com payloads/requests montados sem chamadas externas
+- modo provider-ready `live` com erros claros quando faltar configuração
+- modo provider-ready `live` com erro remoto 4xx/5xx normalizado
+- modo provider-ready `live` com sucesso remoto registrado em logs
 
 ## Fluxos funcionais
 - agendamento
 - cancelamento
 - handoff
+- webhook WhatsApp com envio prepared
+- webhook WhatsApp com envio live
+- calendar freebusy/create/cancel em prepared
+- calendar freebusy/create/cancel em live

@@ -12,9 +12,24 @@ Backend mais próximo de produção para o `UNIVERSAL_AGENT`, separado do `mock-
 - `WHATSAPP_PROVIDER=mock|meta`
 - `CALENDAR_PROVIDER=mock|google`
 
+## Execution mode
+
+- `WHATSAPP_EXECUTION_MODE=prepared|live`
+- `CALENDAR_EXECUTION_MODE=prepared|live`
+
+`prepared` monta payloads e requests sem disparar chamadas externas.
+`live` executa as chamadas HTTP reais para os providers configurados.
+
 ## Objetivo
 
 Oferecer uma estrutura organizada para migrar gradualmente do modo local para integrações reais, sem perder a capacidade de teste local.
+
+## Observações operacionais
+
+- `mock` continua sendo o modo de validação local.
+- `provider-ready` agora pode operar em `prepared` ou `live`.
+- `prepared` preserva a validação sem chamar providers externos.
+- `live` usa as mesmas rotas do backend e executa as chamadas HTTP reais.
 
 ## Endpoints esperados
 

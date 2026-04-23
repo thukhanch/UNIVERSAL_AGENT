@@ -32,12 +32,23 @@ Separar claramente:
 
 Esse modo mantém tudo funcional localmente, grava logs no `store.json` e permite validar os fluxos de agendamento, cancelamento e handoff sem dependências externas.
 
-### Modo provider-ready
+### Modo provider-ready + prepared
 - `APP_MODE=provider-ready`
 - `WHATSAPP_PROVIDER=meta`
 - `CALENDAR_PROVIDER=google`
+- `WHATSAPP_EXECUTION_MODE=prepared`
+- `CALENDAR_EXECUTION_MODE=prepared`
 
-Nesse modo, o backend continua operacional, mas passa a montar requests e payloads prontos para provider real. Quando faltar configuração, o retorno deve ser explícito, sem derrubar o servidor.
+Nesse modo, o backend continua operacional e monta requests/payloads prontos para provider real sem disparar chamadas externas.
+
+### Modo provider-ready + live
+- `APP_MODE=provider-ready`
+- `WHATSAPP_PROVIDER=meta`
+- `CALENDAR_PROVIDER=google`
+- `WHATSAPP_EXECUTION_MODE=live`
+- `CALENDAR_EXECUTION_MODE=live`
+
+Nesse modo, o backend executa chamadas HTTP reais. Se faltar configuração, o retorno deve ser explícito e estável.
 
 ## Variáveis mínimas para provider-ready
 

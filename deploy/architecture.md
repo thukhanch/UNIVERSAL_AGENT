@@ -28,8 +28,9 @@
 - nenhuma dependência de credencial real
 
 ### `provider-ready`
-- foco em preparar a camada de integração real
+- foco em preparar e depois executar a camada de integração real
 - requests e payloads são montados no formato esperado pelos providers
+- `prepared` só prepara chamadas; `live` executa chamadas HTTP reais
 - erros de configuração são retornados de forma explícita
 - servidor continua saudável mesmo sem credenciais válidas
 

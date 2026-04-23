@@ -111,7 +111,8 @@
     "notes": [
       "Fluxo pensado para o app-backend na porta 3020.",
       "Em mock, o backend responde com dados locais e persiste no store.json.",
-      "Em provider-ready, o backend prepara payload Meta e requests Google Calendar sem precisar derrubar o servidor quando faltarem credenciais.",
+      "Em provider-ready + prepared, o backend prepara payload Meta e requests Google Calendar sem disparar chamadas externas.",
+      "Em provider-ready + live, o backend usa as mesmas rotas e passa a executar as chamadas HTTP reais para os providers configurados.",
       "As respostas do app-backend seguem envelope { status, data } ou { status, error }.",
       "Antes de produção real, substituir localhost por URL pública e configurar credenciais válidas."
     ]
